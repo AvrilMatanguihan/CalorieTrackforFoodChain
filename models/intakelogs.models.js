@@ -54,18 +54,20 @@ const getAllIntakes = async()=>{
   return rows;
 };
 
-
 const getUserDailySummary = async(user_id)=>{
   const [rows] = await db.query(
     `
     SELECT
+      CONCAT(tbl_users.firstname, ' ', tbl_users.lastname) AS user,
       intake_logs.date_consumed,
       SUM(menu_items.calories * intake_logs.quantity) AS total_calories
     FROM intake_logs
+    LEFT JOIN tbl_users
+      ON intake_logs.user_id = tbl_users.user_id
     LEFT JOIN menu_items
       ON intake_logs.item_id = menu_items.item_id
     WHERE intake_logs.user_id = ?
-    GROUP BY intake_logs.date_consumed
+    GROUP BY intake_logs.user_id, intake_logs.date_consumed
     ORDER BY intake_logs.date_consumed ASC
     `,
     [user_id]
