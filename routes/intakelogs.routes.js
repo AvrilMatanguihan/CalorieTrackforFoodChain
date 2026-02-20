@@ -1,9 +1,18 @@
 const express = require("express");
 const router = express.Router();
-const { getIntake, getAllIntakefromAllUsers } = require("../controllers/intakelogs.controller");
+const { getIntake, getAllIntake,getDailySummary, getFavorites, getRestaurantStats  } = require("../controllers/intakelogs.controller");
 
-// Use param :id for user_id
+router.get("/", getAllIntake);
 router.get("/:id", getIntake);
-router.get("/", getAllIntakefromAllUsers);
+
+// Get total calories per day per user
+router.get("/:id/summary", getDailySummary);
+
+// Get most eaten items per user
+router.get("/:id/favorites", getFavorites);
+
+// Get restaurant intake logs
+router.get("/restaurant/:id", getRestaurantStats);
+
 
 module.exports = router;
